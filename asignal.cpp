@@ -20,7 +20,7 @@ static void sigaction_signalhandler(const int code, siginfo_t* const si, void* c
   if (code >= 0 && code < (int)SIZE_sigactions_old) {
     /* Call previous handler. */
     if (sigactions_old[code].sa_sigaction != NULL) {
-      printf("-> calling: %p\n", sigactions_old[code]);
+      printf("-> calling: %p\n", sigactions_old[code].sa_sigaction);
       sigactions_old[code].sa_sigaction(code, si, sc);
     }
   }
@@ -82,7 +82,7 @@ extern "C" void setup_signal_handling() {
     int error = sigaction(CATCH_SIGNALS[i], &sa, &sigactions_old[CATCH_SIGNALS[i]]);
 
     if (error == 0) {
-      printf("  - sigaction(): `%d` address: %p DONE\n", CATCH_SIGNALS[i], &sigactions_old[CATCH_SIGNALS[i]]);
+      printf("  - sigaction(): `%d` address: %p DONE\n", CATCH_SIGNALS[i], sigactions_old[CATCH_SIGNALS[i]].sa_sigaction);
     } else {
       printf("  ! sigaction(): `%d` FAILED w/ error: `%d`/`%s` \n", CATCH_SIGNALS[i], errno, strerror(errno));
     }
